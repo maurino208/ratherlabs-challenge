@@ -6,5 +6,5 @@ export default logger({
   transport: {
     target: "pino-pretty",
   },
-  timestamp: logger.stdTimeFunctions.isoTime
+  timestamp: logger.stdTimeFunctions.isoTime,
 });

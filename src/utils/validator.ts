@@ -1,5 +1,6 @@
-const allowedSymbols = ['tBTCUSD', 'tETHUSD'];
-const allowedOperations = ['buy', 'sell'];
+const allowedSymbols = ["tBTCUSD", "tETHUSD"];
+const allowedOperations = ["buy", "sell"];
+
 export function isValidSymbol(symbol: string): boolean {
   return allowedSymbols.includes(symbol);
 }
