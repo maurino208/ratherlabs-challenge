@@ -1,9 +1,10 @@
 import express from 'express';
-import { getTipsController } from '../controller/tipsController';
+import { getBookController } from '../controller/bookController';
+import {marketController} from "../controller/marketController";
 
 const router = express.Router();
 
-// Ruta para obtener el libro por símbolo
-router.get('/book', getTipsController);
+router.get('/book', getBookController);
+router.post('/market', marketController);
 
 export default router;

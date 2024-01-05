@@ -1,14 +1,10 @@
 import logger from "pino";
-import pinoPretty from "pino-pretty";
 
 export default logger({
   name: "challenge-rather",
-  level: "debug",
+  level: process.env.PINO_LOG_LEVEL || "info",
   transport: {
     target: "pino-pretty",
-    options: {
-      translateTyme: true,
-      ignore: "pid.hostname"
-    }
-  }
+  },
+  timestamp: logger.stdTimeFunctions.isoTime
 });
