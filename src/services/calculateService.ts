@@ -1,7 +1,7 @@
 import { getBook } from "./bitfinexService";
 import {
   BadArgumentException,
-  InsufficientLiquidityException,
+  InsufficientAmountException,
 } from "../errors/errors";
 import logger from "../utils/logger";
 import { isValidOperation } from "../utils/validator";
@@ -43,9 +43,9 @@ export async function calculate(
   }
 
   if (remainingAmount > 0) {
-    throw new InsufficientLiquidityException(
-      400,
-      "There is not enough liquidity in the market to satisfy the order completely."
+    throw new InsufficientAmountException(
+      409,
+      "There is not enough amount in the market to satisfy the order completely."
     );
   }
 

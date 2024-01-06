@@ -9,9 +9,9 @@ const app = express();
 dotenv.config();
 
 app.use(bodyParser.json());
-app.use('/api', bookRouter);
+app.use('/', bookRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  logger.info(`Servidor escuchando en el puerto ${PORT}`);
+  logger.info(`Server listening on port ${PORT}`);
 });

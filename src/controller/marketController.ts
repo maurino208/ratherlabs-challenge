@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import {
   BadArgumentException,
-  InsufficientLiquidityException,
+  InsufficientAmountException,
 } from "../errors/errors";
 import { calculate } from "../services/calculateService";
 
@@ -13,10 +13,9 @@ export async function marketController(req: Request, res: Response) {
 
     res.status(200).json(result);
   } catch (err) {
-    if (err instanceof InsufficientLiquidityException) {
+    if (err instanceof InsufficientAmountException) {
       res.status(err.status).json({ error: err.message });
-    }
-    if (err instanceof BadArgumentException) {
+    } else if (err instanceof BadArgumentException) {
       res.status(err.status).json({ error: err.message });
     } else {
       res.status(500).json({ error: "Internal server error" });

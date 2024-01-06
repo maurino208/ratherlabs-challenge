@@ -1,0 +1,117 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: 'Market Status API'
+  description: 'API Documentation'
+basePath: '/'
+
+paths:
+  /book:
+    get:
+      summary: 'Get orderbook tips'
+      description: 'Retrieves a snapshot of orderbook tips'
+      parameters:
+        - in: query
+          name: symbol
+          type: string
+          required: true
+          description: 'Symbol to fetch book'
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  book: 
+                    type: array
+                    items:
+                      type: array
+                      items:
+                        type: number
+                        minItems: 3
+                        maxItems: 3
+        '400':
+          description: 'Bad Argument Exception'
+          schema:
+            type: object
+            properties:
+              error: 
+                type: string
+              details:
+                type: string
+        '500':
+          description: 'Internal Server Error'
+          schema:
+            type: object
+            properties:
+              error: 
+                type: string
+
+  /market:
+    post:
+      summary: 'Market'
+      description: 'Calculate the effective price with the max order size'
+      parameters:
+        - name: 'body'
+          in: 'body'
+          required: true
+          schema:
+            $ref: '#/definitions/Trade'
+      responses:
+        '200':
+          description: 'Successful operation'
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  effectivePrice: 
+                    type: number
+                  maxOrderSize:
+                    type: number
+        '400':
+          description: 'Bad Argument Exception'
+          schema:
+            type: object
+            properties:
+              error: 
+                type: string
+              details:
+                type: string
+        '409':
+          description: 'Insufficient Amount Exception'
+          schema:
+            type: object
+            properties:
+              error: 
+                type: string
+              details:
+                type: string
+        '500':
+          description: 'Internal Server Error'
+          schema:
+            type: object
+            properties:
+              error: 
+                type: string
+
+definitions:
+  Trade:
+    type: object
+    properties:
+      symbol:
+        type: string
+        description: 'Symbol to trade'
+      operation:
+        type: string
+        description: 'Operation to trade'
+      amount:
+        type: number
+        description: 'Amount to trade'
+      limit:
+        type: number
+        description: 'Limit price for the trade'

@@ -7,11 +7,11 @@ export class BadArgumentException extends Error {
   }
 }
 
-export class InsufficientLiquidityException extends Error {
+export class InsufficientAmountException extends Error {
   status: number;
   constructor(status: number, message: string) {
     super(message);
-    this.name = "InsufficientLiquidityException";
+    this.name = "InsufficientAmountException";
     this.status = status;
   }
 }
