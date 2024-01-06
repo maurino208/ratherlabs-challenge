@@ -1,55 +1,50 @@
-import { getBook } from "./bitfinexService";
-import {
-  BadArgumentException,
-  InsufficientAmountException,
-} from "../errors/errors";
-import logger from "../utils/logger";
-import { isValidOperation } from "../utils/validator";
+import { getBook } from './bitfinexService'
+import { BadArgumentException, InsufficientAmountException } from '../errors/errors'
+import logger from '../utils/logger'
+import { isValidOperation } from '../utils/validator'
 
 export async function calculate(
   symbol: string,
   operation: string,
   amount: number,
-  limit?: number
+  limit?: number,
 ): Promise<{ effectivePrice: number; maxOrderSize: number }> {
-  const [, books] = await getBook(symbol);
-
   if (!isValidOperation(operation)) {
-    logger.error("Must enter a valid operation");
-    throw new BadArgumentException(400, "Operation must be ['buy', 'sell']");
+    logger.error('Must enter a valid operation')
+    throw new BadArgumentException(400, "Operation must be ['buy', 'sell']")
   }
 
-  const sortedBooks =
-    operation === "buy"
-      ? books.sort((a, b) => a[0] - b[0])
-      : books.sort((a, b) => b[0] - a[0]);
+  const [, books] = await getBook(symbol)
 
-  let remainingAmount = amount;
-  let totalPrice = 0;
-  let maxOrderSize = 0;
+  const sortedBooks =
+    operation === 'buy' ? books.sort((a, b) => a[0] - b[0]) : books.sort((a, b) => b[0] - a[0])
+
+  let remainingAmount = amount
+  let totalPrice = 0
+  let maxOrderSize = 0
 
   for (const book of sortedBooks) {
-    const executedAmount = Math.min(remainingAmount, book[2]);
+    const executedAmount = Math.min(remainingAmount, book[2])
 
-    totalPrice += executedAmount * book[0];
+    totalPrice += executedAmount * book[0]
 
-    remainingAmount -= executedAmount;
+    remainingAmount -= executedAmount
 
-    maxOrderSize = Math.max(maxOrderSize, executedAmount);
+    maxOrderSize = Math.max(maxOrderSize, executedAmount)
 
     if (remainingAmount <= 0 || (limit && book[0] <= limit)) {
-      break;
+      break
     }
   }
 
   if (remainingAmount > 0) {
     throw new InsufficientAmountException(
       409,
-      "There is not enough amount in the market to satisfy the order completely."
-    );
+      'There is not enough amount in the market to satisfy the order completely.',
+    )
   }
 
-  const effectivePrice = totalPrice / amount;
+  const effectivePrice = totalPrice / amount
 
-  return { effectivePrice, maxOrderSize };
+  return { effectivePrice, maxOrderSize }
 }
